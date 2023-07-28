@@ -1,20 +1,26 @@
 const inquirer = require('inquirer');
 
+// question for actions to take
 const introQuestions = [
     {
         type: 'list',
         message: 'What would you like to do',
         name: 'start_menu',
         choices: ['View All Employees','Add Employee', 'Update Employee Role','View All Roles', 'Add Role', 'View All Departments', 'Add Department', 'Quit']
-    }
+    },
 ];
 
-const departmentQuestions =[
+const employeeQuestions = [
     {
         type: "input",
-        message: "What is the name of the department?",
-        name: "name"
-    }
+        message: "What is the employee's first name?",
+        name: "first_name"
+    },
+    {
+        type: "input",
+        message: "What is the employee's last name?",
+        name: "last_name"
+    },
 ];
 
 const roleQuestions = [
@@ -30,17 +36,12 @@ const roleQuestions = [
     },
 ];
 
-const employeeQuestions = [
+const departmentQuestions =[
     {
         type: "input",
-        message: "What is the employee's first name?",
-        name: "first_name"
+        message: "What is the name of the department?",
+        name: "name"
     },
-    {
-        type: "input",
-        message: "What is the employee's last name?",
-        name: "last_name"
-    }
 ];
 
 module.exports = { introQuestions, departmentQuestions, roleQuestions, employeeQuestions };
