@@ -67,11 +67,47 @@ const viewEmployees = () => {
 };
 
 const addEmployee = (newEmployee) =>{
-
-}
+    const sqlQuery = 'INSERT INTO employee SET ?'
+    return connection.promise().query(sqlQuery, newEmployee)
+};
 
 const addNewEmployee = () =>{
+    showRoles().then((result) => {
+        const roleChoices = result[0].map((role) =>
+        (
+            {
+                name: role.title,
+                value: role.id
+            }
+        ));
+        showEmployees().then((result) => {
+            const managerChoices = result[0].map((employee) =>
+            (
+                {
+                    name: `${employee.first_name} ${employee.last_name}`,
+                    value: employee.id  
+                }
 
+            ));
+            employeeQuestions.push({
+                type: 'list',
+                message: 'What is the role of the employee?',
+                name: 'role_id',
+                choices: roleChoices
+            },
+            {
+                type: 'list',
+                message: 'Who is their mangager?',
+                name: 'manager_id',
+                choices: managerChoices
+            });
+            inquirer.prompt(employeeQuestions).then((answers) => {
+                addEmployee(answers).then((result) =>{
+                    console.log(`${answers.first_name} was added to the list`);
+                }).then(() => initiateQuestions());
+            });
+        });
+    });
 }
 
 const updateEmployee = (employeeUpdate) => {
