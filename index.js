@@ -41,7 +41,7 @@ const initiateQuestions = () => {
                     addNewDepartment();
                     break;
                 case "Quit":
-                    console.log("Thank you for using the employee tracker application! Goodbye!")
+                    console.log("Have a great day!")
                     break;
             }
             if (answers.start_menu === "Quit") {
@@ -108,7 +108,7 @@ const addNewEmployee = () =>{
             });
         });
     });
-}
+};
 
 const updateEmployee = (employeeUpdate) => {
     const sqlQuery = `UPDATE employee SET role_id = ${employeeUpdate.updatedEmployeeRole} WHERE employee.id = ${employeeUpdate.updatedEmployee};`
@@ -176,11 +176,31 @@ const viewRoles = () => {
 const addRole = (newRole) =>{
     const sqlQuery = 'INSERT INTO role SET ?'
     return connection.promise().query(sqlQuery, newRole)
-}
+};
 
 const addNewRole = () =>{
-
-}
+    showDepartments().then((result) => {
+        const departmentChoices = result[0].map((department) =>
+        (
+            {
+                name: department.name,
+                value: department.id
+            }
+        )
+        );
+        roleQuestions.push({
+            type: "list",
+            message: "What department is this role in",
+            name: "department_id",
+            choices: departmentChoices
+        })
+        inquirer.prompt(roleQuestions).then((answers) => {
+            addRole(answers).then((result) => {
+                console.log(` ${answers.title} added to list.`)
+            }).then(() => initiateQuestions())
+        });
+    });
+};
 
 
 
@@ -200,8 +220,12 @@ const viewDepartments = () => {
 const addDepartment = (newDepartment) =>{
     const sqlQuery = 'INSERT INTO department SET ?'
     return connection.promise().query(sqlQuery, newDepartment)
-}
+};
 
 const addNewDepartment = () =>{
-
-}
+    inquirer.prompt(departmentQuestions).then((answers) => {
+        addDepartment(answers).then((result) => {
+            console.log(`${answers.name} added to the list`)
+        }).then(() => initiateQuestions())
+    });
+};
