@@ -111,12 +111,52 @@ const addNewEmployee = () =>{
 }
 
 const updateEmployee = (employeeUpdate) => {
-
-}
+    const sqlQuery = `UPDATE employee SET role_id = ${employeeUpdate.updatedEmployeeRole} WHERE employee.id = ${employeeUpdate.updatedEmployee};`
+    return connection.promise().query(sqlQuery)
+};
 
 const updateEmployeeRole = () => {
-
-}
+    showEmployees().then((result) =>{
+        const updatedEmployeeChoices = result[0].map((employee) =>
+        (
+            {
+                name: employee.first_name,
+                value: employee.id
+            }
+        )
+        );
+        showRoles().then((result) =>{
+            const updateRole = result[0].map((role) =>
+            (
+                {
+                    name: role.title,
+                    value: role.id
+                }
+            )
+            );
+            const updateRoleQuestion = [
+                {
+                    type: 'list',
+                    message: 'Who do you want to update?',
+                    name: 'updatedEmployee',
+                    choices: updatedEmployeeChoices
+                },
+                {
+                    type: 'list',
+                    message: 'What role do you want them in?',
+                    name: 'updatedEmployeeRole',
+                    choices: updateRole
+                }
+            ];
+            inquirer.prompt(updateRoleQuestion).then((answers) =>{
+                updateEmployee(answers).then((result) =>{
+                    console.log('Role updated');
+                    initiateQuestions();
+                });
+            });
+        });
+    });
+};
 
 
 
@@ -134,7 +174,8 @@ const viewRoles = () => {
 };
 
 const addRole = (newRole) =>{
-
+    const sqlQuery = 'INSERT INTO role SET ?'
+    return connection.promise().query(sqlQuery, newRole)
 }
 
 const addNewRole = () =>{
@@ -157,7 +198,8 @@ const viewDepartments = () => {
 };
 
 const addDepartment = (newDepartment) =>{
-
+    const sqlQuery = 'INSERT INTO department SET ?'
+    return connection.promise().query(sqlQuery, newDepartment)
 }
 
 const addNewDepartment = () =>{
